@@ -1,0 +1,30 @@
+name: Sync-branch-with-prestaging
+on:
+  push:
+    branches:
+      - prestaging
+      - master
+
+jobs:
+  sync-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Merge staging -> upgrade
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: prestaging
+          target_branch: prestaging-upgrade
+          github_token: ${{ github.token }}
+
+      - name: Merge staging -> upgrade
+        if: github.ref == 'refs/heads/master' 
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: master
+          target_branch: master-upgrade
+          github_token: ${{ github.token }}
+   
